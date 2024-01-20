@@ -10,9 +10,6 @@ const hanleGetToken = () => {
 </script>
 
 <template>
-  <div @click="hanleGetToken">触发</div>
-  生成：{{ token }}
-  <br>
   <router-view></router-view>
 </template>
 
