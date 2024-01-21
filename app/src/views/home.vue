@@ -1,5 +1,14 @@
 <script setup lang="ts">
+import {useTotpStore} from "../store/totp.ts";
+import {computed} from "vue";
+import {useOtpInstance} from "../composables/useOtp.ts";
 
+const totpStore = useTotpStore();
+const totpStoreInstances = computed(() => {
+  return totpStore.list.map(totp => {
+    return useOtpInstance(totp)
+  })
+})
 </script>
 
 <template>
@@ -35,12 +44,12 @@
     <input type="text" placeholder="搜索 . . ." class="flex-1-0 text-body-2" style="outline: none" />
   </div>
   <!-- 一次性密码 -->
-  <div class="d-flex align-center pa-3 pl-4 pr-4 ma-3 bg-amber rounded-xl" style="box-shadow: 0 0 10px rgba(0,0,0,.3)">
+  <div v-for="item in totpStoreInstances" class="d-flex align-center pa-3 pl-4 pr-4 ma-3 bg-amber rounded-xl" style="box-shadow: 0 0 10px rgba(0,0,0,.3)">
     <div class="flex-1-0">
-      <div class="text-subtitle-2" style="color: rgba(255,255,255)">SEGI 服务器</div>
-      <div class="text-h4 font-weight-black" style="color: #fff;">013987</div>
+      <div class="text-subtitle-2" style="color: rgba(255,255,255)">{{ item.topt.label }} {{ item.token.time }}</div>
+      <div class="text-h4 font-weight-black" style="color: #fff;">{{ item.token.val }}</div>
     </div>
-    <v-progress-circular size="20" model-value="60" bg-color="rgba(255,255,255, .3)" color="#fff"></v-progress-circular>
+    <v-progress-circular size="20" :model-value="100 - item.token.time/30 * 100" bg-color="rgba(255,255,255, .3)" color="#fff"></v-progress-circular>
   </div>
 </template>
 
