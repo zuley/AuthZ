@@ -21,7 +21,7 @@ const totpStoreInstances = computed(() => {
           <v-btn v-bind="props" density="compact" icon="$plus" class="mr-3"></v-btn>
         </template>
         <v-list density="compact">
-          <v-list-item value="qrcode">扫二维码</v-list-item>
+          <v-list-item value="qrcode" :to="{ path: '/addTotp/toURL' }">扫二维码</v-list-item>
           <v-list-item value="key">密钥添加</v-list-item>
           <v-list-item value="url">URL添加</v-list-item>
         </v-list>

@@ -17,7 +17,7 @@ export default router;
 
 /** 以下代码不要修改 */
 function loadRouters() {
-  const context = import.meta.glob("../views/**/*.vue", { eager: true });
+  const context = import.meta.glob("../views/**/*.vue");
   const routes: RouteRecordRaw[] = [];
 
   Object.keys(context).forEach((key: any) => {
@@ -28,7 +28,7 @@ function loadRouters() {
     routes.push({
       path: path,
       name: name,
-      component: () => import(`../views/${name}.vue`)
+      component: context[key]
     })
   });
 

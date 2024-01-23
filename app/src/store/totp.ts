@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
+import {ref} from "vue";
 
-export type TotpStore = {
+export type Totp = {
   /* 令牌发布人 */
   issuer?: string
   /* 令牌标签 */
@@ -17,13 +18,24 @@ export type TotpStore = {
   period?: number
 }
 
-export const useTotpStore = defineStore('totp', {
-  state: () => ({
-    /* 令牌列表 */
-    list: [
-      {
-        secret: 'CFSNOYYTYTQAWL7Y',
-      }
-    ] as TotpStore[]
-  })
-})
+export type TotpStore = {
+  title: string
+  data: Totp
+}
+
+export const useTotpStore = defineStore('totp', () => {
+  const list = ref<TotpStore[]>([])
+  // 添加令牌
+  function add (totp: TotpStore) {
+    list.value.push(totp)
+  }
+  // 通过 title 获取令牌
+  function getTotpByTitle (title: string) {
+    return list.value.find((item) => item.title === title)
+  }
+  // 通过 secret 获取令牌
+  function getTotpBySecret (secret: string) {
+    return list.value.find((item) => item.data.secret === secret)
+  }
+  return { list, add, getTotpByTitle, getTotpBySecret }
+}, { persist: true })
