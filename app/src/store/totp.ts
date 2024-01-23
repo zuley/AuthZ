@@ -4,7 +4,7 @@ export type TotpStore = {
   /* 令牌发布人 */
   issuer?: string
   /* 令牌标签 */
-  label: string
+  label?: string
   /* 是否在令牌标签中显示发布人 */
   issuerInLabel?: boolean
   /* 令牌密钥 */
