@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import * as OTPAuth from "otpauth"
-import {useTotpStore} from "../../store/totp.ts";
-import {tr} from "vuetify/locale";
+import {useTotpStore} from "../../store/totp.ts"
+import {useRouter} from "vue-router"
+import {SubmitEventPromise} from "vuetify"
 
 const totpStore = useTotpStore()
 
@@ -14,7 +15,6 @@ const urlRules = [
     let errMsg = ''
     try {
       const totp = OTPAuth.URI.parse(value)
-      console.log('ddd', totp)
       if (totpStore.getTotpBySecret(totp.secret.base32)) errMsg = '该密钥已存在'
     } catch (e) {
       errMsg = '必须为有效的 otpauth 链接'
@@ -35,7 +35,7 @@ const titleRules = [
 ]
 
 // 提交表单
-const dialog = ref(false)
+const dialog = ref(true)
 async function submit(event: SubmitEventPromise) {
   const form = await event
   if (!form.valid) return
@@ -46,6 +46,12 @@ async function submit(event: SubmitEventPromise) {
   })
   // 添加成功后跳转回首页
   dialog.value = true
+}
+
+// 前往首页
+const router = useRouter()
+function goHome() {
+  router.push({ name: 'Index' })
 }
 
 </script>
@@ -67,13 +73,16 @@ async function submit(event: SubmitEventPromise) {
   </v-form>
   <v-dialog
       v-model="dialog"
-      activator="parent"
       width="auto"
   >
-    添加成功
-    <v-card-actions>
-      <v-btn color="primary" block @click="dialog = false">前往首页</v-btn>
-    </v-card-actions>
+    <v-card>
+      <v-card-text>
+        添加成功，前往首页
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" block @click="goHome">前往首页</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
 </template>
 
