@@ -25,15 +25,15 @@ export type TotpStore = {
 
 export const useTotpStore = defineStore('totp', () => {
   const list = ref<TotpStore[]>([])
-  // 添加令牌
+  // 添加配置
   function add (totp: TotpStore) {
     list.value.push(totp)
   }
-  // 通过 title 获取令牌
+  // 通过 title 获取配置
   function getTotpByTitle (title: string) {
     return list.value.find((item) => item.title === title)
   }
-  // 通过 secret 获取令牌
+  // 通过 secret 获取配置
   function getTotpBySecret (secret: string) {
     return list.value.find((item) => item.data.secret === secret)
   }
