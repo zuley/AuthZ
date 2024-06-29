@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "app",
+    "productName": "AuthZ",
     "version": "0.0.0"
   },
   "tauri": {
@@ -35,8 +35,8 @@
     "windows": [
       {
         "fullscreen": false,
-        "resizable": true,
-        "title": "app",
+        "resizable": false,
+        "title": "AuthZ",
         "width": 300,
         "height": 600
       }

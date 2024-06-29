@@ -2,6 +2,7 @@
 import {useTotpStore} from "../store/totp.ts";
 import {computed} from "vue";
 import {useOtpInstance} from "../composables/useOtp.ts";
+import { shell } from "@tauri-apps/api";
 
 const totpStore = useTotpStore();
 const totpStoreInstances = computed(() => {
@@ -9,12 +10,23 @@ const totpStoreInstances = computed(() => {
     return useOtpInstance(totp)
   })
 })
+
+//
+const handleToHomeSite = (e) => {
+  console.log('跳转到官网', e)
+  try {
+    shell.open('https://authz.app')
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 </script>
 
 <template>
   <!-- 头部 -->
   <div class="pa-3 d-flex justify-space-between align-center">
-    <div class="text-h4">AutoZ</div>
+    <div class="text-h4">AuthZ</div>
     <div class="">
       <v-menu location="start">
         <template v-slot:activator="{ props }">
@@ -30,7 +42,7 @@ const totpStoreInstances = computed(() => {
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" density="compact" icon="$menu"></v-btn>
         </template>
-        <v-list density="compact">
+        <v-list density="compact" @click:select="handleToHomeSite">
           <v-list-item value="qrcode">设置</v-list-item>
           <v-list-item value="key">关于</v-list-item>
           <v-list-item value="url">官网</v-list-item>
@@ -44,13 +56,13 @@ const totpStoreInstances = computed(() => {
     <input type="text" placeholder="搜索 . . ." class="flex-1-0 text-body-2" style="outline: none" />
   </div>
   <!-- 一次性密码 -->
-  <div v-for="item in totpStoreInstances" class="d-flex align-center pa-3 pl-4 pr-4 ma-3 bg-amber rounded-xl" style="box-shadow: 0 0 10px rgba(0,0,0,.3)">
-    <div class="flex-1-0">
-      <div class="text-subtitle-2" style="color: rgba(255,255,255)">{{ item.topt.label }} {{ item.token.time }}</div>
-      <div class="text-h4 font-weight-black" style="color: #fff;">{{ item.token.val }}</div>
-    </div>
-    <v-progress-circular size="20" :model-value="100 - item.token.time/30 * 100" bg-color="rgba(255,255,255, .3)" color="#fff"></v-progress-circular>
-  </div>
+  <v-card class="ma-3" v-for="(item, index) in totpStoreInstances" :title="totpStore.list[index].title" variant="tonal">
+    <div class="text-center text-h2 pb-6">{{ item.token.val }}</div>
+    <v-progress-linear
+        :model-value="item.token.time/30 * 100"
+        color="pink-lighten-1"
+    ></v-progress-linear>
+  </v-card>
 </template>
 
 <style scoped>

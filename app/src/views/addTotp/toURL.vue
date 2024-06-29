@@ -35,7 +35,7 @@ const titleRules = [
 ]
 
 // 提交表单
-const dialog = ref(true)
+const dialog = ref(false)
 async function submit(event: SubmitEventPromise) {
   const form = await event
   if (!form.valid) return
