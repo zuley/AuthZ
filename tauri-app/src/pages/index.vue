@@ -12,7 +12,7 @@ import OtpCard from '../components/otpCard/index.vue'
       </template>
     </van-nav-bar>
     <div class="overflow-y-auto flex-1">
-      <OtpCard v-for="item in 10" />
+      <OtpCard v-for="item in 1" />
     </div>
   </div>
 </template>

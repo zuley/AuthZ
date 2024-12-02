@@ -7,7 +7,7 @@ import { routes } from 'vue-router/auto-routes'
 
 import App from "./App.vue";
 
-import { Button, NavBar, Icon, RollingText, Notify } from 'vant';
+import { Button, NavBar, Icon, RollingText, Notify, Progress } from 'vant';
 // 2. 引入组件样式
 import 'vant/lib/index.css';
 
@@ -24,5 +24,7 @@ app.use(NavBar)
 app.use(Icon)
 app.use(RollingText)
 app.use(Notify)
+app.use(Progress)
+
 app.use(router)
 app.mount("#app")
