@@ -1,18 +1,40 @@
-<script setup>
-import { ref } from 'vue'
+<script lang="ts" setup>
+import { ref, computed } from 'vue'
 import { showNotify } from 'vant'
+import { TOTP } from 'otpauth'
+import { Secret } from '../../stores/totp'
+
+const props = defineProps<{
+  secretData: Secret
+}>()
+const otp = new TOTP(props.secretData)
+
+const code = ref(otp.generate())
+
+// 计算当前周期内剩余的秒数
+const calculateTimeRemaining = () => {
+  const currentTime = Math.floor(Date.now() / 1000)
+  return props.secretData.period - (currentTime % props.secretData.period)
+}
+const timeRemaining = ref(calculateTimeRemaining());
+// 定时更新剩余秒数
+setInterval(() => {
+  timeRemaining.value = calculateTimeRemaining()
+  if (timeRemaining.value === 30) {
+    code.value = otp.generate()
+  }
+}, 1000)
 
 // 复制方法：点击复制图标触发复制文本到剪贴板
 const onHandleCopy = () => {
-  navigator.clipboard.writeText('cao')
+  navigator.clipboard.writeText(code.value)
   showNotify({ type: 'success', message: '复制成功' });
 }
 
 // 进度
-const progress = ref(0)
-setTimeout(() => {
-  progress.value = 50
-}, 1000)
+const progress = computed(() => {
+  return Math.floor((timeRemaining.value / props.secretData.period) * 100)
+})
 </script>
 
 <template>
@@ -24,7 +46,7 @@ setTimeout(() => {
       </div>
     </div>
     <div class="number flex justify-center items-center py-4 cursor-pointer">
-      <van-rolling-text :height="50" :start-num="0" :target-num="123456" :duration="0.5" />
+      <van-rolling-text :height="50" :start-num="0" :target-num="parseInt(code)" :duration="0.2" />
       <van-icon class="ml-2" name="description-o" size="30" @click="onHandleCopy" />
     </div>
     <van-progress :percentage="progress" />
